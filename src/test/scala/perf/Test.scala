@@ -6,15 +6,15 @@ import io.gatling.core.Predef._
 
 class Test extends Simulation {
 
-  val rampupDuration = 1200; // 20 минут * 60
-  val holdDuration = 3600; // 60 минут * 60
-  val rampdownDuration = rampupDuration;
+  val httpProtocol = http
+    .baseUrl("https://test.k6.io")
+    .acceptHeader("test/html,application/xhtml+xml,appplication/xml;q=0.9,*/*;q=0.8")
+    .acceptEncodingHeader("gzip, deflate")
+    .acceptLanguageHeader("en-US,en;q=0.5")
+    .disableFollowRedirect
 
   setUp(
-    CommonScenario().inject(
-      rampUsersPerSec(0) to 0.4 during (rampupDuration),
-      constantUsersPerSec(0.4) during (holdDuration),
-      rampUsersPerSec(0.4) to 0 during (rampdownDuration)
+    CommonScenario().inject(atOnceUsers(1)
     )
   ).protocols(httpProtocol)
 }
